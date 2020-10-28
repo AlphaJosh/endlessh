@@ -7,38 +7,38 @@ Requires=network-online.target
 Type=simple
 Restart=always
 RestartSec=30sec
-ExecStart=/usr/local/bin/endlessh
+PIDFile=/run/endlessh.pid
+#User=hass
+ExecStart=/srv/endlessh/endlessh -v -4
+# -f /srv/endlessh/endlessh.cfg
+# > /srv/endlessh/endlessh.log 2> /srv/endlessh/endlessh.err
 KillSignal=SIGTERM
 
 # Stop trying to restart the service if it restarts too many times in a row
 StartLimitInterval=5min
 StartLimitBurst=4
 
-StandardOutput=journal
-StandardError=journal
-StandardInput=null
+#StandardOutput=journal
+#StandardError=journal
+#StandardInput=null
 
-PrivateTmp=true
-PrivateDevices=true
-ProtectSystem=full
-ProtectHome=true
-InaccessiblePaths=/run /var
+#PrivateTmp=true
+#PrivateDevices=true
+#ProtectSystem=full
+#ProtectHome=true
+#InaccessiblePaths=/run /var
 
 ## If you want Endlessh to bind on ports < 1024
-## 1) run: 
+## 1) run:
 ##     setcap 'cap_net_bind_service=+ep' /usr/local/bin/endlessh
 ## 2) uncomment following line
 #AmbientCapabilities=CAP_NET_BIND_SERVICE
 ## 3) comment following line
-PrivateUsers=true
+#PrivateUsers=true
 
-NoNewPrivileges=true
-ConfigurationDirectory=endlessh
-ProtectKernelTunables=true
-ProtectKernelModules=true
-ProtectControlGroups=true
-MemoryDenyWriteExecute=true
-
-[Install]
-WantedBy=multi-user.target
-
+#NoNewPrivileges=true
+#ConfigurationDirectory=endlessh
+#ProtectKernelTunables=true
+#ProtectKernelModules=true
+#ProtectControlGroups=true
+#MemoryDenyWriteExecute=true
