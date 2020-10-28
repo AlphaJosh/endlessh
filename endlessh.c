@@ -26,7 +26,7 @@
 #include <netinet/in.h>
 #include <syslog.h>
 
-#define ENDLESSH_VERSION           1.1
+#define ENDLESSH_VERSION           1.2
 
 #define DEFAULT_PORT              2222
 #define DEFAULT_DELAY            10000  /* milliseconds */
@@ -80,7 +80,7 @@ logstdio(enum loglevel level, const char *format, ...)
         vprintf(format, ap);
         va_end(ap);
         fputc('\n', stdout);
-
+        
         errno = save;
     }
 }
@@ -158,6 +158,9 @@ client_new(int fd, long long send_next)
                 inet_ntop(AF_INET6, &s->sin6_addr,
                           c->ipaddr, sizeof(c->ipaddr));
             }
+            f = open("endlessh_clients.log", "a")
+            f.write(c->ipaddr)
+            f.close()
         }
     }
     return c;
