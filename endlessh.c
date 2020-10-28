@@ -158,9 +158,9 @@ client_new(int fd, long long send_next)
                 inet_ntop(AF_INET6, &s->sin6_addr,
                           c->ipaddr, sizeof(c->ipaddr));
             }
-            f = open("endlessh_clients.log", "a");
-            f.write(c->ipaddr);
-            f.close();
+            FILE *fc = fopen("/var/www/html/endlessh_clients.txt", "a");
+            fprintf(fc,"%s\n",c->ipaddr);
+            fclose(fc);
         }
     }
     return c;
