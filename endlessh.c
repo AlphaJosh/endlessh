@@ -158,7 +158,9 @@ client_new(int fd, long long send_next)
                 inet_ntop(AF_INET6, &s->sin6_addr,
                           c->ipaddr, sizeof(c->ipaddr));
             }
-            FILE *fc = fopen("/var/www/html/endlessh_clients.txt", "a");
+//            FILE *fc = fopen("/var/www/html/endlessh_clients.txt", "a");
+            FILE *fc = fopen(c->logpath, "a");
+            
             fprintf(fc,"%s\n",c->ipaddr);
             fclose(fc);
         }
@@ -375,6 +377,12 @@ config_set_max_line_length(struct config *c, const char *s, int hardfail)
 }
 
 static void
+config_set_log_path(struct config *c, const char *s, int hardfail)
+{
+    // Need to set output
+}
+
+static void
 config_set_bind_family(struct config *c, const char *s, int hardfail)
 {
   switch (*s) {
@@ -403,6 +411,7 @@ enum config_key {
     KEY_MAX_CLIENTS,
     KEY_LOG_LEVEL,
     KEY_BIND_FAMILY,
+    KEY_LOG_PATH,
 };
 
 static enum config_key
@@ -414,7 +423,8 @@ config_key_parse(const char *tok)
         [KEY_MAX_LINE_LENGTH] = "MaxLineLength",
         [KEY_MAX_CLIENTS]     = "MaxClients",
         [KEY_LOG_LEVEL]       = "LogLevel",
-        [KEY_BIND_FAMILY]     = "BindFamily"
+        [KEY_BIND_FAMILY]     = "BindFamily",
+        [KEY_LOG_PATH]        = "LogPath"
     };
     for (size_t i = 1; i < sizeof(table) / sizeof(*table); i++)
         if (!strcmp(tok, table[i]))
@@ -484,6 +494,9 @@ config_load(struct config *c, const char *file, int hardfail)
                 case KEY_BIND_FAMILY:
                     config_set_bind_family(c, tokens[1], hardfail);
                     break;
+                case KEY_LOG_PATH:
+                    config_set_log_path(c, tokens[1], hardfail);
+                    break;                    
                 case KEY_LOG_LEVEL: {
                     errno = 0;
                     char *end;
@@ -510,6 +523,7 @@ config_log(const struct config *c)
     logmsg(log_info, "Delay %ld", c->delay);
     logmsg(log_info, "MaxLineLength %d", c->max_line_length);
     logmsg(log_info, "MaxClients %d", c->max_clients);
+    logmsg(log_info, "LogPath %s", c->log_path);
     logmsg(log_info, "BindFamily %s",
         c->bind_family == AF_INET6 ? "IPv6 Only" :
         c->bind_family == AF_INET  ? "IPv4 Only" :
