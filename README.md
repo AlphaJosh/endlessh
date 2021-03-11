@@ -11,6 +11,22 @@ occurs, this program doesn't depend on any cryptographic libraries. It's
 a simple, single-threaded, standalone C program. It uses `poll()` to
 trap multiple clients at a time.
 
+## Install
+cd /srv/
+git clone https://github.com/AlphaJosh/endlessh.git
+sudo apt-get install build-essential
+make
+
+/srv/endlessh/endlessh -v -4
+#Confirm it works (Putty to port 2222)
+
+cp util/endlessh.service /etc/systemd/system
+
+systemctl daemon-reload
+service endlessh start
+
+A log file will be created at /var/www/html/endlessh_clients.txt which can be injected into a Fortigate Fabric Connector to block any future connections
+
 ## Usage
 
 Usage information is printed with `-h`.
